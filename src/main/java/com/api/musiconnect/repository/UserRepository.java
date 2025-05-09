@@ -1,5 +1,6 @@
 package com.api.musiconnect.repository;
 
+import com.api.musiconnect.model.entity.Band;
 import com.api.musiconnect.model.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,4 +35,8 @@ public interface UserRepository extends JpaRepository<User, Long>
 
     @Query("SELECT u FROM User u WHERE u.birthdate = :birthdate")
     List<User> findUsersByBirthdate(LocalDate birthdate);
+
+    //Para añadir con userid a una banda
+    @Query("SELECT u FROM User u WHERE u.id = :id")
+    Optional<User> findUserById(@Param("id") Long id);
 }
