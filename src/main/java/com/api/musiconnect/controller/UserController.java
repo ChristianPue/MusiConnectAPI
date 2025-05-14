@@ -1,5 +1,7 @@
 package com.api.musiconnect.controller;
 
+import com.api.musiconnect.model.enums.UserType;
+import com.api.musiconnect.dto.response.UserSearchResponse;
 import com.api.musiconnect.dto.request.GeneralUpdateUser;
 import com.api.musiconnect.dto.request.RegisterUserRequest;
 import com.api.musiconnect.dto.request.ConfigUpdateUserRequest;
@@ -54,5 +56,12 @@ public class UserController
     public ResponseEntity<UserResponse> generalUpdateUserById(@Valid @RequestBody GeneralUpdateUser request)
     {
         return new ResponseEntity<>(userService.generalUpdateUserById(request), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/search")
+    public List<UserSearchResponse> searchUsersByLocationAndType(
+            @RequestParam String location,
+            @RequestParam UserType userType) {
+        return userService.searchByLocationAndType(location, userType);
     }
 }

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import com.api.musiconnect.model.enums.UserType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,4 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long>
 
     @Query("SELECT u FROM User u WHERE u.birthdate = :birthdate")
     List<User> findUsersByBirthdate(LocalDate birthdate);
+
+    List<User> findByLocationIgnoreCaseAndUserType(String location, UserType userType);
 }

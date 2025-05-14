@@ -1,5 +1,7 @@
 package com.api.musiconnect.service;
 
+import com.api.musiconnect.model.enums.UserType;
+import com.api.musiconnect.dto.response.UserSearchResponse;
 import com.api.musiconnect.dto.request.GeneralUpdateUser;
 import com.api.musiconnect.dto.request.RegisterUserRequest;
 import com.api.musiconnect.dto.request.ConfigUpdateUserRequest;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,5 +112,16 @@ public class UserService
         userRepository.save(user);
 
         return userMapper.UserToUserResponse(user);
+    }
+
+    public List<UserSearchResponse> searchByLocationAndType(String location, UserType userType) {
+        List<User> users = userRepository.findByLocationIgnoreCaseAndUserType(location, userType);
+        return users.stream()
+                .map(user -> new UserSearchResponse(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getLocation(),
+                        user.getUserType()))
+                .collect(Collectors.toList());
     }
 }
