@@ -2,7 +2,7 @@ package com.api.musiconnect.dto.request;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
