@@ -26,8 +26,10 @@ public record RegisterUserRequest(
 
          @NotBlank(message = "El género no puede estar vacío.")
          @Pattern(regexp = "^(MALE|FEMALE|INDETERMINATE)$", message = "El género debe ser MALE, FEMALE o INDETERMINATE.")
-         String gender
+         String gender,
 
+         @NotBlank(message = "La localidad no puede estar vacía.")
+         String location
          // createdAt y updatedAt no se colocarían porque se generan automáticamente
 )
 {}

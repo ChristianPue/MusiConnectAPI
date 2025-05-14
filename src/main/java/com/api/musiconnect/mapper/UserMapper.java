@@ -49,7 +49,7 @@ public class UserMapper
                 .birthdate(LocalDate.parse(request.birthdate(), formatter)) // Convertir de String a LocalDate si es necesario
                 .gender(gender)
                 .bio(null)
-                .location(null)
+                .location(request.location())
                 .status(status)
                 .instruments(instruments)
                 .createdAt(now)
