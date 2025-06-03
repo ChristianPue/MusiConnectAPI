@@ -10,13 +10,6 @@ import com.musiconnect.api.dto.request.UserProfileRequest;
 
 @Component
 public class OtherFunctions {
-  // Metodo auxiliar para actualizar si el valor no es nulo
-  public <T> void updateIfNotNull(T value, Consumer<T> setter) {
-    if (value != null) {
-      setter.accept(value);
-    }
-  }
-
   // Metodo auxiliar para saber si un valor no es nulo. Retornar true o false
   public <T> boolean isNotNull(T value) {
     return value != null;

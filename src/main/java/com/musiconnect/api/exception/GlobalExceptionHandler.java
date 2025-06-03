@@ -44,4 +44,14 @@ public class GlobalExceptionHandler {
     err.put("details", "ResourceNotFoundException");
     return err;
   }
+
+  @ExceptionHandler(BusinessRuleException.class)
+  public Map<String, Object> handleBusinessRuleException(BusinessRuleException ex) {
+    Map<String, Object> err = new LinkedHashMap<>();
+    err.put("timestamp", LocalDateTime.now());
+    err.put("message", ex.getMessage());
+    err.put("details", "BusinessRuleException");
+    return err;
+  }
+
 }

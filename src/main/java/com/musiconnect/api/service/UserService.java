@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import com.musiconnect.api.dto.request.RegisterUserRequest;
 import com.musiconnect.api.dto.request.UserProfileRequest;
 import com.musiconnect.api.dto.response.UserProfileResponse;
 import com.musiconnect.api.dto.response.UserResponse;
+import com.musiconnect.api.exception.BusinessRuleException;
 import com.musiconnect.api.exception.DuplicateResourceException;
 import com.musiconnect.api.exception.InvalidInputException;
 import com.musiconnect.api.exception.ResourceNotFoundException;
@@ -80,9 +82,44 @@ public class UserService {
   }
 
   // US01: Crear perfil musical
+  @Transactional
+  public UserProfileResponse createProfile(Long id, UserProfileRequest request) {
+    User user = repository.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+    
+    // Excepciones:
+    // 1. Type
+    if (!functions.isNotNullOrBlank(request.type())) {
+      throw new BusinessRuleException("No se ingresó un tipo de usuario.");
+    }
+    // 2. Bio
+    if (!functions.isNotNullOrBlank(request.bio())) {
+      throw new BusinessRuleException("No se ingresó una biografía.");
+    }
+    // 3. Location
+    if (!functions.isNotNullOrBlank(request.location())) {
+      throw new BusinessRuleException("No se ingresó una locación.");
+    }
+    // 4. Gender
+    if (!functions.isNotNullOrBlank(request.gender())) {
+      throw new BusinessRuleException("No se ingresó un género.");
+    }
+    
+    // Actualización de datos:
+    user.getUserProfile().setType(UserType.valueOf(request.type()));
+    user.getUserProfile().setBio(request.bio());
+    user.getUserProfile().setLocation(request.location());
+    user.getUserProfile().setGender(UserGender.valueOf(request.gender()));
+    user.setUpdatedAt(LocalDateTime.now());
+
+    repository.save(user);
+
+    return mapper.toUserProfileResponse(user);
+  }
+
   // US02: Editar perfil
   @Transactional
-  public UserProfileResponse editUserProfile(Long id, UserProfileRequest request) {
+  public UserProfileResponse editProfile(Long id, UserProfileRequest request) {
     User user = repository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
     
@@ -155,11 +192,15 @@ public class UserService {
     return mapper.toUserProfileResponse(user);
   }
 
-
-
   // US03: Establecer disponibilidad
-  
+  public UserProfileResponse changeStatus(Long id, UserStatus status) {
+    User user = repository.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+    
+    user.getUserProfile().setStatus(status);
 
-  // US04: Seguir a un Artista/Banda (User)
+    repository.save(user);
 
+    return mapper.toUserProfileResponse(user);
+  }
 }
